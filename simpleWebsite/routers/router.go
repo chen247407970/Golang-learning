@@ -1,11 +1,20 @@
 package routers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	. "github.com/chen247407970/simpleWebsite/api"
+	"io"
+	"os"
+	. "simpleWebsite/api"
 )
 
 func InitRouter() *gin.Engine {
+	f, err := os.Create("log/gin.log")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	gin.DefaultWriter = io.MultiWriter(f)
+
 	router := gin.Default()
 
 	router.POST("/login", LoginHandler)

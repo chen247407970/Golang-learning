@@ -2,62 +2,61 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"strconv"
 	"log"
-	"github.com/chen247407970/simpleWebsite/models"
 	"net/http"
+	"simpleWebsite/models"
 )
 
 func LoginHandler(c *gin.Context) {
-	id_str := c.PostForm("id")
-	name := c.PostForm("name")
-	id, err := strconv.Atoi(id_str)
+	var person models.Person
+	err := c.Bind(&person)
+
 	if err != nil {
 		log.Fatal(err)
+		c.JSON(http.StatusOK, gin.H{
+			"errcode":     400,
+			"description": "Post Data Error",
+		})
+		return
 	}
 
-	ps := models.Person{
-		Id:		id,
-		Name:	name,
-	}
-
-	ra := ps.QueryPerson()
-	if ra {
-		c.JSON(http.StatusOK, gin.H {
-			"success":	ra,
-			"id":		id,
-			"name":		name,
+	res := person.QueryPerson()
+	if res {
+		c.JSON(http.StatusOK, gin.H{
+			"success": res,
+			"id":      person.Id,
+			"name":    person.Name,
 		})
 	} else {
-		c.JSON(http.StatusOK, gin.H {
-			"success":	ra,
+		c.JSON(http.StatusOK, gin.H{
+			"success": res,
 		})
 	}
 }
 
 func RegisterHandler(c *gin.Context) {
-	id_str := c.PostForm("id")
-	name := c.PostForm("name")
-	id, err := strconv.Atoi(id_str)
+	var person models.Person
+	err := c.Bind(&person)
+
 	if err != nil {
 		log.Fatal(err)
+		c.JSON(http.StatusOK, gin.H{
+			"errcode":     400,
+			"description": "Post Data Error",
+		})
+		return
 	}
 
-	ps := models.Person{
-		Id:		id,
-		Name:	name,
-	}
-
-	ra := ps.AddPerson()
-	if ra {
-		c.JSON(http.StatusOK, gin.H {
-			"success":	ra,
-			"id":		id,
-			"name":		name,
+	res := person.AddPerson()
+	if res {
+		c.JSON(http.StatusOK, gin.H{
+			"success": res,
+			"id":      person.Id,
+			"name":    person.Name,
 		})
 	} else {
-		c.JSON(http.StatusOK, gin.H {
-			"success":	ra,
+		c.JSON(http.StatusOK, gin.H{
+			"success": res,
 		})
 	}
 }
